@@ -4,9 +4,9 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: 'dashboard',
-        component: () => import('pages/IndexPage.vue'),
-        meta: { requiresAuth: true },
+        path: 'todo',
+        component: () => import('pages/TodoPage.vue'),
+        meta: { requiresAuth: false },
       },
     ],
   },

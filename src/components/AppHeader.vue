@@ -1,17 +1,10 @@
 <template>
   <q-header elevated>
     <q-toolbar>
-      <q-btn
-        flat
-        dense
-        round
-        icon="menu"
-        aria-label="Menu"
-        @click="toggleLeftDrawer"
-        v-if="authStore.isAuthenticated"
-      />
+      <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer"
+        v-if="authStore.isAuthenticated" />
 
-      <q-toolbar-title> Rococo Sample </q-toolbar-title>
+      <q-toolbar-title> Todo App </q-toolbar-title>
 
       <div class="q-mr-md text-caption text-grey-5">v{{ version }}</div>
 
@@ -30,7 +23,8 @@
     </q-toolbar>
   </q-header>
 
-  <q-drawer v-if="authStore.isAuthenticated" v-model="leftDrawerOpen" show-if-above bordered>
+  <q-drawer v-if="authStore.isAuthenticated" v-model="leftDrawerOpen" show-if-above bordered side="left" :width="300"
+    :breakpoint="1024">
     <q-list>
       <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
     </q-list>
@@ -46,9 +40,9 @@ import EssentialLink from 'components/EssentialLink.vue'
 
 const linksList = [
   {
-    title: 'Dashboard',
-    icon: 'code',
-    link: '/dashboard',
+    title: 'Todo',
+    icon: 'task',
+    link: '/todo',
   },
 ]
 

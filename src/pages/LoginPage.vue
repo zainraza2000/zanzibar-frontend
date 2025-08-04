@@ -38,7 +38,7 @@
     </q-card>
   </q-page>
 </template>
-  
+
 <script setup>
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
@@ -53,4 +53,3 @@ async function onSubmit() {
   await authStore.login({ email: email.value, password: password.value })
 }
 </script>
-  
