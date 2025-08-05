@@ -2,8 +2,8 @@
   <q-page class="q-pa-md">
     <div class="todo-app">
       <TodoHeader @add-todo="addTodo" />
-      <main class="main" v-show="todoStore.hasTodos">
-        <div class="toggle-all-container">
+      <main class="main" v-show="!todoStore.loading">
+        <div class="toggle-all-container" v-show="todoStore.hasTodos">
           <input type="checkbox" id="toggle-all-input" class="toggle-all" v-model="toggleAllModel"
             :disabled="filteredTodos.length === 0" />
           <label class="toggle-all-label" htmlFor="toggle-all-input"> Toggle All Input </label>
@@ -12,6 +12,9 @@
           <TodoItem v-for="(todo, index) in filteredTodos" :key="todo.entity_id" :todo="mappedTodo(todo)" :index="index"
             @delete-todo="deleteTodo" @edit-todo="editTodo" @toggle-todo="toggleTodo" />
         </ul>
+        <div v-if="!todoStore.hasTodos && !todoStore.loading" class="no-todos">
+          <p>No todos found. Add one above to get started!</p>
+        </div>
       </main>
       <TodoFooter :todos="mappedTodos" :current-filter="currentFilter" @delete-completed="deleteCompleted"
         @set-filter="setFilter" />
@@ -20,14 +23,16 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, nextTick } from 'vue'
 
 import TodoFooter from '@/components/todo/TodoFooter.vue'
 import TodoHeader from '@/components/todo/TodoHeader.vue'
 import TodoItem from '@/components/todo/TodoItem.vue'
 import { useTodoStore } from 'src/stores/todo'
+import { useAuthStore } from 'src/stores/auth'
 
 const todoStore = useTodoStore()
+const authStore = useAuthStore()
 
 // Map store filter values to component filter values
 const filterMapping = {
@@ -117,8 +122,14 @@ function setFilter(filter) {
 }
 
 onMounted(async () => {
+  authStore.initialize()
   todoStore.initialize()
-  await todoStore.fetchTodos()
+
+  await nextTick()
+
+  if (authStore.isAuthenticated) {
+    await todoStore.fetchTodos()
+  }
 })
 </script>
 
